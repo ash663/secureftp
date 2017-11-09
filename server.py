@@ -1,5 +1,7 @@
 import os
 import socket
+import re
+
 
 def incoming_connection(conn):
     #Send certificate
@@ -14,7 +16,10 @@ def incoming_connection(conn):
             if exists, encrypt the file and send it.
         If upload:
             accept file, and store after doing necessary decryption'''
-
+        if re.search('download', request):
+            fileName=request.split(':')[1]
+            #add code to check if file exists
+            
         conn.sendall(reply)
 
     #came out of loop
