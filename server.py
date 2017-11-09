@@ -11,7 +11,7 @@ def incoming_connection(conn):
         If download:
             check if fileName exists
             if doesn't exist, break out of loop, send 404 error
-            if exists, send the file.
+            if exists, encrypt the file and send it.
         If upload:
             accept file, and store after doing necessary decryption'''
 
