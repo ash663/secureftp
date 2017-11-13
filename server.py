@@ -27,10 +27,15 @@ def incoming_connection(conn):
     #came out of loop
     conn.close()
 
+#Used for hashing
+BUF_SIZE = 65536
+sha1 = hashlib.sha1()
+#For opening a connection with client. Can make it work for multiple clients by select or threading
 PORT=4999
 PORT=PORT+1
 HOST=""
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 try:
     s.bind((HOST, PORT))
 except socket.error as msg:
