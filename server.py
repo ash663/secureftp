@@ -1,7 +1,7 @@
 import os
 import socket
 import re
-
+import hashlib
 
 def incoming_connection(conn):
     #Send certificate
@@ -9,6 +9,7 @@ def incoming_connection(conn):
     while True:
         #Receiving from client
         request = conn.recv(1024)
+        #Note: Below, may be you can check type of request, then decide download or upload
         '''Check if request is upload/download
         If download:
             check if fileName exists
@@ -19,7 +20,8 @@ def incoming_connection(conn):
         if re.search('download', request):
             fileName=request.split(':')[1]
             #add code to check if file exists
-            
+        elif re.search('upload', request):
+            fileName=request.split(':')[1]
         conn.sendall(reply)
 
     #came out of loop
