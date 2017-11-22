@@ -24,7 +24,8 @@ def incoming_connection(conn):
             if os.path.isfile(fileName):
                 #File exists. Now encrypt the file.
                 #Encryption algo: Hash Timestamp. XOR with File. But, in blocks.
-                hashedTimeStamp = hmac.new(secret, msg=time.time(), digestmod=hashlib.sha1).hexdigest()
+                timeStamp=str(time.time())
+                hashedTimeStamp = hmac.new(secret, msg=timeStamp, digestmod=hashlib.sha1).hexdigest()
                 #msg is epoch time
                 with open(fileName, 'rb') as f:
                     while True:
@@ -32,8 +33,10 @@ def incoming_connection(conn):
                         if not data:
                             break
                         encryptedFile = encryptedFile + (data ^ hashedTimeStamp)
-                encryptedFile = m.hexdigest()
-
+                #encryptedFile = m.hexdigest()
+                macOfFile = hmac.new(secret.reverse(), encryptedFile+timeStamp, digestmod=hashlib.sha1).hexdigest()
+                fileToSend = encryptedFile+timeStamp+macOfFile
+                #Write code to send file
         elif re.search('upload', request):
             fileName=request.split(':')[1]
         conn.sendall(reply)
