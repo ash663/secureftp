@@ -4,6 +4,17 @@ import re
 import hashlib
 import time
 
+def genPublicKey():
+#       p = 6700417
+#       g = 524287
+	publicKey = (pow(g, randomNumber)) % p
+	#print 'Public key =',y
+	return publicKey
+
+def genSharedKey(clientPublicKey):
+	sharedKey = (pow(clientPublicKey, randomNumber)) % p
+	#print "shared key =",shrd_key
+
 def incoming_connection(conn):
     #Send certificate
     conn.send(certificate)
@@ -39,7 +50,7 @@ def incoming_connection(conn):
                 #Write code to send file
         elif re.search('upload', request):
             fileName=request.split(':')[1]
-        conn.sendall(reply)
+        #conn.sendall(reply)
 
     #came out of loop
     conn.close()
@@ -55,6 +66,11 @@ HOST=""
 #Create socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+#For DH
+p = 587
+g = 23
+randomNumber = random.randint(9, p)
+
 try:
     #Bind socket to port
     s.bind((HOST, PORT))
@@ -66,4 +82,8 @@ s.listen(10)
 while 1:
     conn, addr = s.accept()
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
+    publicKey = genPublicKey()
+    conn.send(publicKey)
+    clientPublicKey = (conn.recv(1024))
+    genSharedKey(int(clientPublicKey))
     start_new_thread(incoming_connection ,(conn,))
